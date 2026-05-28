@@ -23,7 +23,4 @@ fhir-lakehouse/
 ├── pipelines/
 │   └── orchestration_pipeline.json
 │
-└── tests/
-    ├── __init__.py
-    ├── test_fhir_utils.py
-    └── test_silver_transforms.py
+
