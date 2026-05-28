@@ -1,0 +1,39 @@
+resources:
+  jobs:
+    FHIR_Data_Load:
+      name: FHIR Data Load
+      tasks:
+        - task_key: raw_ingestion
+          notebook_task:
+            notebook_path: /Workspace/Users/vyshnavi.thunuguntla@outlook.com/databricks-repo-FHIR/notebooks/01_raw_ingestion.py
+            source: WORKSPACE
+        - task_key: bronze_layer
+          depends_on:
+            - task_key: raw_ingestion
+          notebook_task:
+            notebook_path: /Workspace/Users/vyshnavi.thunuguntla@outlook.com/databricks-repo-FHIR/notebooks/02_bronze_layer.py
+            source: WORKSPACE
+        - task_key: silver_layer
+          depends_on:
+            - task_key: bronze_layer
+          notebook_task:
+            notebook_path: /Workspace/Users/vyshnavi.thunuguntla@outlook.com/databricks-repo-FHIR/notebooks/03_silver_layer.py
+            source: WORKSPACE
+        - task_key: scd2_versioning
+          depends_on:
+            - task_key: silver_layer
+          notebook_task:
+            notebook_path: /Workspace/Users/vyshnavi.thunuguntla@outlook.com/databricks-repo-FHIR/notebooks/05_scd2_versioning.py
+            source: WORKSPACE
+        - task_key: gold_layer
+          depends_on:
+            - task_key: scd2_versioning
+          notebook_task:
+            notebook_path: /Workspace/Users/vyshnavi.thunuguntla@outlook.com/databricks-repo-FHIR/notebooks/04_gold_layer.py
+            source: WORKSPACE
+      queue:
+        enabled: true
+      parameters:
+        - name: PYTHONPATH
+          default: /Workspace/Users/vyshnavi.thunuguntla@outlook.com/databricks-repo-FHIR
+      performance_target: PERFORMANCE_OPTIMIZED
